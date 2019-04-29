@@ -1,0 +1,83 @@
+<div class="body">
+  <div id="subtitle" style="margin:0 25px 0 25px; width: 100%; text-align: center;" >
+    <div >
+      <h3>Manage your to do list</h3>
+    <p>Click on checkbox or drag and drop to done</p>
+    </div>
+  </div>
+  <div id="container" class="center-container">
+
+    <div id="todo" class="example-container">
+      <h2 class="title" style="float:left">To-do list</h2>
+      <button (click)="addNewItemInToDoList()" [disabled]="!allowedAdd" class="title"
+        style="float:right; border:none; border-radius:100%">
+        <i class="material-icons" style="color:#686871">add</i>
+      </button>
+      <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="todoImg" [cdkDropListConnectedTo]="[doneList]"
+        class="example-list clear" (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of todoImg; let i = index" [attr.data-index]="i" cdkDrag
+          on-mouseover='over(item["item"].id)' (mouseleave)="leave(item['item'].id)">
+          <mat-checkbox *ngIf="item['item'].isInput" class="text">
+            <ng-container>
+              <input type="text" [(ngModel)]="selectedItem.name" (keyup.enter)="add()" />
+            </ng-container>
+          </mat-checkbox>
+
+          <div *ngIf="item['imgURL']" id="image_{{item['item'].id}}"><img [src]="item['imgURL']" height="200"
+              width="100%"></div>
+          <mat-checkbox *ngIf="!item['item'].isInput" [checked]="item['item'].isFinished"
+            (click)="markFinish(item['item'].id)" class="text">
+            <ng-container>
+              <p style="float:left">{{item['item'].name}}</p>
+            </ng-container>
+          </mat-checkbox>
+
+          <button class="text" [matMenuTriggerFor]="i" id="{{item['item'].id}}" hidden
+            style="float:right; border:none; background-color: transparent;">
+            <i class="material-icons">more_vert</i>
+          </button>
+          <mat-menu #i="matMenu" xPosition="before">
+            <button mat-menu-item><button style="text-align: left; padding-left:0px;" mat-button
+                (click)="openDialogImage(item['item'].id)"><i class="material-icons"
+                  style="float: left; line-height: 15px;">image</i> <span
+                  style="line-height: 15px; float: left;">Image</span></button></button>
+            <button mat-menu-item (click)="deleteItem(item['item'].id)" class="clear"><i class="material-icons"
+                style="float:left; line-height: 15px;">delete_outline</i> <span
+                style="line-height: 15px; float:left;">Delete</span></button>
+                <button mat-menu-item (click)="editItem(item['item'].id)" class="clear"><i class="material-icons"
+                  style="float:left; line-height: 15px;">edit</i> <span
+                  style="line-height: 15px; float:left;">Edit</span></button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+
+    <div id="done" class="example-container clear">
+      <h2 class="title" style="float:left">Done</h2>
+      <button mat-button (click)="openDialogDelete()" class="title"
+        style="float:right; border:none; background-color: transparent;">
+        <i class="material-icons" style="color:#686871;">delete_sweep</i>
+      </button>
+      <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="doneImg" [cdkDropListConnectedTo]="[todoList]"
+        class="example-list clear" (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of doneImg" cdkDrag>
+          <div *ngIf="item['imgURL']"><img [src]="item['imgURL']" height="200" width="100%"></div>
+          <mat-checkbox [checked]="item['item'].isFinished" (click)="markUnFinish(item['item'].id)">
+            <ng-container>
+              <p style="float:left">{{item['item'].name}}</p>
+            </ng-container>
+          </mat-checkbox>
+          <!-- <button class="text" [matMenuTriggerFor]="i"
+            style="float:right; border:none; background-color: transparent;" >
+            <i class="material-icons">more_vert</i>
+          </button>
+          <mat-menu #i="matMenu" xPosition="before">
+            <button mat-menu-item (click)="test(item.id)">Item {{item.id}}</button>
+            <button mat-menu-item>Item {{i}}</button>
+          </mat-menu> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
